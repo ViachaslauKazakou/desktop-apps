@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import (
     QMessageBox, QComboBox
 )
 
+
 class ThermalCalculator(QWidget):
     def __init__(self):
         super().__init__()
@@ -142,6 +143,7 @@ class ThermalCalculator(QWidget):
 
         except ValueError:
             QMessageBox.critical(self, "Ошибка", "Введите корректные числовые значения!")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
