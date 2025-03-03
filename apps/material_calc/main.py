@@ -1,7 +1,13 @@
 import sys
 from PyQt5.QtWidgets import (
-    QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, 
-    QMessageBox, QComboBox
+    QApplication,
+    QWidget,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QVBoxLayout,
+    QMessageBox,
+    QComboBox,
 )
 
 
@@ -16,7 +22,7 @@ class ThermalCalculator(QWidget):
             "Новосибирск": {"Стена": 3.7, "Крыша": 5.5, "Пол": 3.0, "Тнаруж": -35},
             "Красноярск": {"Стена": 4.2, "Крыша": 6.0, "Пол": 3.5, "Тнаруж": -38},
             "Якутск": {"Стена": 5.2, "Крыша": 7.0, "Пол": 4.5, "Тнаруж": -50},
-            "Свой вариант": None  # Позволяет ввести вручную
+            "Свой вариант": None,  # Позволяет ввести вручную
         }
 
         # Данные по материалам
@@ -26,7 +32,7 @@ class ThermalCalculator(QWidget):
             "Пенополиуретан (0.025 Вт/м·К)": 0.025,
             "Керамзит (0.120 Вт/м·К)": 0.120,
             "Газобетон (0.120 Вт/м·К)": 0.120,
-            "Свой вариант": None
+            "Свой вариант": None,
         }
 
         self.init_ui()
@@ -139,10 +145,14 @@ class ThermalCalculator(QWidget):
             lambda_material = float(self.entry_lambda.text())
 
             thickness = R_required * lambda_material
-            self.result_label.setText(f"Рекомендуемая толщина: {thickness * 100:.2f} см")
+            self.result_label.setText(
+                f"Рекомендуемая толщина: {thickness * 100:.2f} см"
+            )
 
         except ValueError:
-            QMessageBox.critical(self, "Ошибка", "Введите корректные числовые значения!")
+            QMessageBox.critical(
+                self, "Ошибка", "Введите корректные числовые значения!"
+            )
 
 
 if __name__ == "__main__":
