@@ -26,36 +26,126 @@ class DicePoker(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        self.layout = QVBoxLayout()  # Make layout an instance variable
+        
+        # Основной вертикальный слой
+        self.main_layout = QVBoxLayout()
 
-        # User 1
+        # Верхний горизонтальный слой (слева и справа)
+        self.top_layout = QHBoxLayout()
+
+        # Левый верхний блок (3 элемента)
+        self.left_top_layout = QVBoxLayout()
+        self.left_top_layout.setContentsMargins(0, 0, self.width() // 2, 0)
+        
+        # Player 1 name
         self.label_username_1 = QLabel("Player 1:")
+        self.label_username_1.setFont(QFont("Arial", 16, QFont.Bold))
+        self.label_username_1.setAlignment(Qt.AlignCenter)
+        self.left_top_layout.addWidget(self.label_username_1)
+        
+        # Edit widget for player 1 name
         self.user_name_1_edit = QLineEdit()
         self.user_name_1_edit.setPlaceholderText("Enter your name")
-
-        # Set width to 50% of window width
-        window_width = 600  # from setGeometry
-        self.user_name_1_edit.setFixedWidth(int(window_width * 0.5))
-
+        self.user_name_1_edit.setFixedWidth(200)
+        self.left_top_layout.addWidget(self.user_name_1_edit)
+        
         # "Enter" button for confirming name
         self.enter_button = QPushButton("Enter")
         self.enter_button.setFixedSize(100, 30)
         self.enter_button.clicked.connect(self.confirm_name)
-
-        # Add elements to layout
-        self.layout.addWidget(self.label_username_1)
-        self.layout.addWidget(self.user_name_1_edit)
-        self.layout.addWidget(self.enter_button)
-
-        # count label
+        self.left_top_layout.addWidget(self.enter_button)
+        
+        # Total score label 1
         self.total_score_label = QLabel(f"Total score: {self.total_score}")
         self.total_score_label.setFont(QFont("Arial", 14, QFont.Bold))
-        self.layout.addWidget(self.total_score_label)
-
-        # current_count
+        self.left_top_layout.addWidget(self.total_score_label)
+        
+        # current score 1
         self.current_count_label = QLabel(f"Current score: {self.current_count}")
         self.current_count_label.setFont(QFont("Arial", 14, QFont.Bold))
-        self.layout.addWidget(self.current_count_label)
+        self.left_top_layout.addWidget(self.current_count_label)
+        self.left_top_layout.addStretch(1)
+
+        # Правый верхний блок (3 элемента)
+        self.right_top_layout = QVBoxLayout()
+        
+        # Player 2 name
+        self.label_username_2 = QLabel("Player 2:")
+        self.label_username_2.setFont(QFont("Arial", 16, QFont.Bold))
+        self.label_username_2.setAlignment(Qt.AlignCenter)
+        self.right_top_layout.addWidget(self.label_username_2)
+        
+        # Edit widget for player 2 name
+        self.user_name_2_edit = QLineEdit()
+        self.user_name_2_edit.setPlaceholderText("Enter your name")
+        self.user_name_2_edit.setFixedWidth(200)
+        self.right_top_layout.addWidget(self.user_name_2_edit)
+        
+        # "Enter" button for confirming name
+        self.enter_button_2 = QPushButton("Enter")
+        self.enter_button_2.setFixedSize(100, 30)
+        self.enter_button_2.clicked.connect(self.confirm_name)
+        self.right_top_layout.addWidget(self.enter_button_2)
+        
+        # Total score label 2
+        self.total_score_label_2 = QLabel(f"Total score: {self.total_score}")
+        self.total_score_label_2.setFont(QFont("Arial", 14, QFont.Bold))
+        self.right_top_layout.addWidget(self.total_score_label_2)
+        
+        # current score 2
+        self.current_count_label_2 = QLabel(f"Current score: {self.current_count}")
+        self.current_count_label_2.setFont(QFont("Arial", 14, QFont.Bold))
+        self.right_top_layout.addWidget(self.current_count_label_2)
+        self.right_top_layout.addStretch(1)
+
+        # Добавляем два верхних блока в общий горизонтальный слой
+        self.top_layout.addLayout(self.left_top_layout)
+        self.top_layout.addLayout(self.right_top_layout)
+
+        # Нижний блок (3 элемента в один ряд)
+        self.dices_bottom_layout = QHBoxLayout()
+        self.set_dices()
+        
+        # self.bottom_layout.addWidget(QLabel("Нижний 1", self))
+        # self.bottom_layout.addWidget(QLabel("Нижний 2", self))
+        # self.bottom_layout.addWidget(QLabel("Нижний 3", self))
+
+        # roll layout
+        # Add ROLL button
+        self.roll_layout = QHBoxLayout()
+        self.roll_button = QPushButton("ROLL DICE")
+        self.roll_button.setFixedSize(200, 50)
+        self.roll_button.setFont(QFont("Arial", 14, QFont.Bold))
+        # self.roll_button.clicked.connect(self.roll_dice)
+        self.roll_layout.addWidget(self.roll_button, alignment=Qt.AlignHCenter | Qt.AlignTop)
+
+        # Save count button
+        self.save_button = QPushButton("Save")
+        self.save_button.setFixedSize(100, 40)
+        self.save_button.setFont(QFont("Arial", 14, QFont.Bold))
+        self.save_button.clicked.connect(self.save_score)
+        self.roll_layout.addWidget(self.save_button, alignment=Qt.AlignHCenter | Qt.AlignTop)
+        # Add stretch to push everything to the top
+        # self.roll_layout.addStretch(1)
+
+        # Добавляем все в основной слой
+        self.main_layout.addLayout(self.top_layout, 1)   # Верхний блок (50%)
+        self.main_layout.addLayout(self.dices_bottom_layout, 1)  # Нижний блок (50%)
+        self.main_layout.addLayout(self.roll_layout, 1)  # Кнопка "ROLL DICE" (50%)
+
+        self.setLayout(self.main_layout)
+        self.setWindowTitle("1000 Poker Dice Game")
+        self.resize(700, 500)  # Размер окна
+        
+        # Connect the return pressed event to confirm name
+        self.user_name_1_edit.returnPressed.connect(self.confirm_name)
+        self.user_name_1_edit.textChanged.connect(self.update_label)
+        return
+
+        
+        # Set width to 50% of window width
+        window_width = 600  # from setGeometry
+        self.user_name_1_edit.setFixedWidth(int(window_width * 0.5))
 
         # Save count button
         self.save_button = QPushButton("Save")
@@ -64,7 +154,19 @@ class DicePoker(QWidget):
         self.save_button.clicked.connect(self.save_score)
         self.layout.addWidget(self.save_button)
 
+        
+        # Create a horizontal layout to hold both player sections
+        main_layout = QHBoxLayout()
+        main_layout.addLayout(self.layout)  # Add player 1 layout to the left
+        main_layout.addLayout(self.layout2)  # Add player 2 layout to the right
+
+        # Set the main layout as the layout for the widget
+        self.setLayout(main_layout)
+
+
         self.set_dices()
+        
+          
 
         # Add ROLL button
         self.roll_button = QPushButton("ROLL DICE")
@@ -72,7 +174,6 @@ class DicePoker(QWidget):
         self.roll_button.setFont(QFont("Arial", 14, QFont.Bold))
         # self.roll_button.clicked.connect(self.roll_dice)
         self.layout.addWidget(self.roll_button, alignment=Qt.AlignHCenter | Qt.AlignTop)
-        self.layout.addStretch(1)
 
         # Add stretch to push everything to the top
         self.layout.addStretch(1)
@@ -81,21 +182,21 @@ class DicePoker(QWidget):
         self.user_name_1_edit.returnPressed.connect(self.confirm_name)
         self.user_name_1_edit.textChanged.connect(self.update_label)
 
-        self.setLayout(self.layout)
+        # self.setLayout(self.layout)
         self.setWindowTitle("1000 Poker Dice")
-        self.setGeometry(200, 100, 700, 600)
+        self.setGeometry(300, 100, 800, 600)
 
     def set_dices(self, count=5):
         self.dice_labels = []
-        dice_layout = QHBoxLayout()
+        # dice_layout = QHBoxLayout()
         for _ in range(count):  # Assuming 5 dice
             dice_label = QLabel("0")
             dice_label.setFont(QFont("Arial", 24, QFont.Bold))
             dice_label.setAlignment(Qt.AlignCenter)
             dice_label.setFixedSize(50, 50)
-            dice_layout.addWidget(dice_label)
+            self.dices_bottom_layout.addWidget(dice_label)
             self.dice_labels.append(dice_label)
-        self.layout.addLayout(dice_layout)
+        # self.layout.addLayout(dice_layout)
 
     def update_label(self, text):
         self.label_username_1.setText(f"Your name: {text}")
@@ -113,7 +214,7 @@ class DicePoker(QWidget):
         self.enter_button.setParent(None)
 
         # Update the label
-        self.label_username_1.setText(f"Player: {self.player_name}")
+        self.label_username_1.setText(f"Player 1: {self.player_name}")
         self.label_username_1.setFont(QFont("Arial", 14, QFont.Bold))
 
         # Add START button
@@ -122,9 +223,9 @@ class DicePoker(QWidget):
         self.start_button.setFont(QFont("Arial", 14, QFont.Bold))
         self.start_button.clicked.connect(self.start_game)
 
-        # Add stretch to push the start button to the middle and top
-        self.layout.addStretch(1)
-        self.layout.addWidget(
+        # # Add stretch to push the start button to the middle and top
+        # self.bottom_layout.addStretch(1)
+        self.roll_layout.addWidget(
             self.start_button, alignment=Qt.AlignHCenter | Qt.AlignTop
         )
 
