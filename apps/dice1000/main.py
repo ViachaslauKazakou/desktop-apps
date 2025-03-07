@@ -247,7 +247,6 @@ class DicePoker(QWidget):
         )
 
         # Store the current score
-        
         self.current_count = score
 
         if self.turn == 1:
