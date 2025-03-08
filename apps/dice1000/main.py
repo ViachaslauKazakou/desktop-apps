@@ -19,6 +19,8 @@ class DicePoker(QWidget):
         self.free_dices = 5
         self.current_count = 0
         self.turn = 1
+        self.game_score_1 = 0
+        self.game_score_2 = 0
         self.init_ui()
 
     def init_ui(self):
@@ -28,6 +30,16 @@ class DicePoker(QWidget):
 
         # Верхний горизонтальный слой (слева и справа)
         self.top_layout = QHBoxLayout()
+
+        # score top layout
+        self.score_top_layout = QHBoxLayout()
+        self.score_top_layout.setContentsMargins(0, 0, 0, 0)
+        self.score_top_layout.setSpacing(0)
+        self.game_score = QLabel(f"Game score: 0 : 0")
+        self.game_score.setFont(QFont("Arial", 16, QFont.Bold))
+        self.game_score.setStyleSheet("color: red;")
+        self.game_score.setAlignment(Qt.AlignCenter)
+        self.score_top_layout.addWidget(self.game_score)
 
         # Левый верхний блок (3 элемента)
         self.left_top_layout = QVBoxLayout()
@@ -45,12 +57,19 @@ class DicePoker(QWidget):
         self.user_name_1_edit.setFixedWidth(200)
         self.left_top_layout.addWidget(self.user_name_1_edit)
 
-        # "Enter" button for confirming name
-        self.enter_button = QPushButton("Enter")
-        self.enter_button.setFixedSize(120, 40)
-        self.enter_button.clicked.connect(self.confirm_name)
-        self.left_top_layout.addWidget(self.enter_button, alignment=Qt.AlignRight)
+        # enter button layout
+        self.enter_button_layout = QHBoxLayout()
+        self.enter_button_layout.setContentsMargins(250, 0, 300, 0)
+        self.enter_button_layout.setStretchFactor(self.enter_button_layout, 1)
+        # self.enter_button_layout.setSpacing(0)
+        self.enter_button_layout.addStretch(1)
 
+
+        # "Enter" button for confirming name
+        self.enter_button = QPushButton("Enter names")
+        self.enter_button.setFixedSize(200, 40)
+        self.enter_button.clicked.connect(self.confirm_name)
+        self.enter_button_layout.addWidget(self.enter_button, alignment=Qt.AlignCenter | Qt.AlignTop)
 
         # Total score label 1
         self.total_score_label_1 = QLabel(f"Total score: {self.total_score_1}")
@@ -78,12 +97,6 @@ class DicePoker(QWidget):
         self.user_name_2_edit.setFixedWidth(200)
         self.right_top_layout.addWidget(self.user_name_2_edit)
 
-        # # "Enter" button for confirming name
-        # self.enter_button_2 = QPushButton("Enter")
-        # self.enter_button_2.setFixedSize(100, 30)
-        # self.enter_button_2.clicked.connect(self.confirm_name)
-        # self.right_top_layout.addWidget(self.enter_button_2)
-
         # Total score label 2
         self.total_score_label_2 = QLabel(f"Total score: {self.total_score_2}")
         self.total_score_label_2.setFont(QFont("Arial", 14, QFont.Bold))
@@ -96,6 +109,7 @@ class DicePoker(QWidget):
         self.right_top_layout.addStretch(1)
 
         # Добавляем два верхних блока в общий горизонтальный слой
+
         self.top_layout.addLayout(self.left_top_layout)
         self.top_layout.addLayout(self.right_top_layout)
 
@@ -104,7 +118,9 @@ class DicePoker(QWidget):
         self.set_dices()
 
         # Добавляем все в основной слой
+        self.main_layout.addLayout(self.score_top_layout)
         self.main_layout.addLayout(self.top_layout, 1)  # Верхний блок (50%)
+        self.main_layout.addLayout(self.enter_button_layout, 1)
         self.main_layout.addLayout(self.dices_bottom_layout, 1)  # Нижний блок (50%)
         # self.main_layout.addLayout(self.roll_layout, 1)  # Кнопка "ROLL DICE" (50%)
 
@@ -298,15 +314,31 @@ class DicePoker(QWidget):
                 "Winner",
                 f"{self.player_name_1} wins!",
             )
-            self.close()
+            self.game_score_1 += 1
+            self.game_score.setText(f"Game score: {self.game_score_1} : {self.game_score_2}")
+            self.reset_dices()
+            self.clear_current_count_label()
+            self.clear_total_count()
+            # self.close()
         elif self.total_score_2 >= 200:
             QMessageBox.information(
                 self,
                 "Winner",
                 f"{self.player_name_2} wins!",
             )
-            self.close()
+            # self.close()
+            self.game_score_2 += 1
+            self.game_score.setText(f"Game score: {self.game_score_1} : {self.game_score_2}")
+            self.reset_dices()
+            self.clear_current_count_label()
+            self.clear_total_count()
 
+    def clear_total_count(self):
+        self.total_score_1 = 0
+        self.total_score_2 = 0
+        self.total_score_label_1.setText(f"Total score: {self.total_score_1}")
+        self.total_score_label_2.setText(f"Total score: {self.total_score_2}")  
+        
         # if hasattr(self, "Total_score_label"):
         #     self.total_score_label.setText(f"Total score: {self.total_score}")
         # else:
