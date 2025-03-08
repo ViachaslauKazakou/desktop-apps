@@ -1,14 +1,7 @@
 import sys
-from PyQt5.QtWidgets import (
-    QApplication,
-    QWidget,
-    QLabel,
-    QLineEdit,
-    QPushButton,
-    QVBoxLayout,
-    QMessageBox,
-    QComboBox,
-)
+
+from PyQt5.QtWidgets import (QApplication, QComboBox, QLabel, QLineEdit,
+                             QMessageBox, QPushButton, QVBoxLayout, QWidget)
 
 
 class ThermalCalculator(QWidget):
@@ -145,14 +138,10 @@ class ThermalCalculator(QWidget):
             lambda_material = float(self.entry_lambda.text())
 
             thickness = R_required * lambda_material
-            self.result_label.setText(
-                f"Рекомендуемая толщина: {thickness * 100:.2f} см"
-            )
+            self.result_label.setText(f"Рекомендуемая толщина: {thickness * 100:.2f} см")
 
         except ValueError:
-            QMessageBox.critical(
-                self, "Ошибка", "Введите корректные числовые значения!"
-            )
+            QMessageBox.critical(self, "Ошибка", "Введите корректные числовые значения!")
 
 
 if __name__ == "__main__":
