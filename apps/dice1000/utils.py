@@ -7,7 +7,7 @@ class DiceUtils:
         self._dict_dice()
 
     def _dict_dice(self) -> dict[str, int]:
-        ''' Create a dictionary with the count of each dice '''
+        """Create a dictionary with the count of each dice"""
         for dice in self.dices:
             if dice.text() == "1":
                 self.dices_dict["10"] = self.dices_dict.get("10", 0) + 1
@@ -16,17 +16,17 @@ class DiceUtils:
         return self.dices_dict
 
     def count_dice(self) -> int:
-        ''' Rules for counting dice:
+        """Rules for counting dice:
         1= 10 points, 5= 5 points, all other - 0 points
         5 of a kind = 100 * dice value
         3 of a kind = 10 * dice value
         4 of a kind = 20 * dice value
         5 of a kind = 100 * dice value
         counting dices removed from the list
-        '''
+        """
 
         # check if all dice are the same
-        if len(self.dices_dict) == 1:  # Only one unique value
+        if len(self.dices_dict) == 1 and len(self.dices) == 5:  # Only one unique value
             key = list(self.dices_dict.keys())[0]  # Get the first (and only) key
             return int(key) * 100, {}
         # Check if 4s
@@ -35,10 +35,11 @@ class DiceUtils:
             # max_value = self.dices_dict[max_key]
             if self.dices_dict[max_key] == 4:
                 self.count += int(max_key) * 20
+                del self.dices_dict[max_key]
             elif self.dices_dict[max_key] == 3:
                 self.count += int(max_key) * 10
+                del self.dices_dict[max_key]
             # delete used dices
-            del self.dices_dict[max_key]
             self._count_rest()
         elif len(self.dices_dict) == 3:
             max_key = max(self.dices_dict, key=self.dices_dict.get)
@@ -48,7 +49,7 @@ class DiceUtils:
                 del self.dices_dict[max_key]
                 self._count_rest()
             else:
-                self._count_rest()      
+                self._count_rest()
         else:
             self._count_rest()
 
@@ -57,7 +58,7 @@ class DiceUtils:
         # count += sum(5 for d in dices if d.text() == "5")
         # count 10
         # sum(int(dice.text()) for dice in dices)
-    
+
     def _count_rest(self):
         rest_dict = self.dices_dict.copy()
         for key, value in rest_dict.items():
