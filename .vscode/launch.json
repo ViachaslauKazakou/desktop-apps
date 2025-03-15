@@ -12,7 +12,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python Debugger: Pytest Current File",
+            "name": "Pytest",
             "type": "debugpy",
             "request": "launch",
             "module": "pytest",
@@ -20,7 +20,8 @@
             "args": [
                 "-s",
                 "-v",
-                "${file}"
+                // "${file}"
+                "${workspaceFolder}/tests/test_dice100.py"
             ],
             "console": "integratedTerminal",
             "purpose": ["debug-test"],
